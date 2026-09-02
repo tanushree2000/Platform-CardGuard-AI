@@ -1,0 +1,73 @@
+{
+  "info": {
+    "name": "CardGuard AI API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "approvalId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      }
+    },
+    {
+      "name": "Transactions",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/customers/cust_maya/transactions"
+      }
+    },
+    {
+      "name": "Agent",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"session_id\": \"demo_1\", \"customer_id\": \"cust_maya\", \"message\": \"I don't recognize Metro Electronics 184.72\"}"
+        },
+        "url": "{{baseUrl}}/api/agent/chat"
+      }
+    },
+    {
+      "name": "Approve",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"approved\": true}"
+        },
+        "url": "{{baseUrl}}/api/approvals/{{approvalId}}/decision"
+      }
+    },
+    {
+      "name": "Cases",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/cases"
+      }
+    }
+  ]
+}

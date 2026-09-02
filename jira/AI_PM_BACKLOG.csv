@@ -1,0 +1,20 @@
+Issue Type,Key,Epic,Summary,Priority
+Epic,CG-E1,Fraud Intake,Fraud intake and transaction identification,Highest
+Story,CG-101,CG-E1,Identify referenced transaction,Highest
+Story,CG-102,CG-E1,Classify scoped intent,Highest
+Epic,CG-E2,Policy Grounding,Governed policy retrieval,Highest
+Story,CG-201,CG-E2,Retrieve policy from governed corpus,Highest
+Epic,CG-E3,Case Management,Dispute case workflow,Highest
+Story,CG-301,CG-E3,Create one active dispute case,Highest
+Epic,CG-E4,Account Protection,Governed card controls,Highest
+Story,CG-401,CG-E4,Require approval before card lock,Highest
+Epic,CG-E5,Trust & Safety,Agent guardrails,Highest
+Story,CG-501,CG-E5,Block prompt injection,Highest
+Story,CG-502,CG-E5,Redact payment credentials,Highest
+Epic,CG-E6,AI Quality,Evals and observability,Highest
+Story,CG-601,CG-E6,Golden dataset regression,Highest
+Story,CG-602,CG-E6,LangSmith tracing,High
+Epic,CG-E7,Analytics,Product analytics,High
+Story,CG-701,CG-E7,Instrument PostHog funnel,High
+Epic,CG-E8,Operations,Fraud Operations console,High
+Story,CG-801,CG-E8,List AI-assisted cases,High
