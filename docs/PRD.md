@@ -1,268 +1,315 @@
-CardGuard AI
-
-Product Requirements Document
+CardGuard AI — Product Requirements Document
 
 Author: Tanushree Poojary
 Role: AI Product Manager
 Status: MVP
-Product: AI-Powered Transaction Identification & Dispute Support Platform
+Last Updated: September 2026
 
 ⸻
 
-1. Change History
-
-Version	Change	Owner
-v1.0	Defined product problem, MVP scope and safety model	Tanushree Poojary
-v1.1	Added agent architecture, guardrails and evaluation requirements	Tanushree Poojary
-v1.2	Added rollout strategy and success metrics	Tanushree Poojary
-
-⸻
-
-2. Overview
+1. Overview
 
 Problem
 
-Customers sometimes see transactions on their card that they do not recognize. Resolving these cases can involve several separate steps: identifying the transaction, explaining relevant policies, determining whether a dispute is appropriate, protecting the account and escalating suspicious activity to Fraud Operations.
+When customers see an unfamiliar card transaction, resolving it can involve multiple systems and decisions: transaction lookup, merchant identification, policy retrieval, dispute intake, account protection, and Fraud Operations escalation.
 
-A traditional chatbot can explain information but cannot manage the complete workflow. At the same time, allowing an AI agent to independently perform consequential actions such as locking a card creates unacceptable risk.
+A traditional chatbot can explain information but cannot safely manage the complete workflow. On the other hand, allowing an LLM to independently take actions such as locking a card creates unacceptable risk.
 
-Product
+Product Decision
 
-CardGuard AI is a bounded AI agent designed to help customers identify and resolve unfamiliar card transactions while keeping consequential actions under deterministic product controls.
-
-The core product principle is:
+CardGuard AI is a bounded AI agent that helps customers understand and resolve unfamiliar transactions while keeping consequential actions behind deterministic controls.
 
 Reasoning is not authorization.
 
-The AI can classify intent, retrieve information, summarize, explain and recommend actions. Product policy controls approvals, account state, tool execution, persistence and escalation.
+The AI can:
+
+* Classify intent
+* Retrieve information
+* Summarize policies
+* Explain transactions
+* Recommend next steps
+
+Deterministic product logic controls:
+
+* Tool execution
+* Account state
+* User approvals
+* Persistence
+* Escalation
 
 All MVP account data and actions are synthetic.
 
 ⸻
 
-3. Objectives
+2. Goals
 
 CardGuard AI should:
 
-* Help users understand unfamiliar transactions.
-* Retrieve relevant policy information before recommending next steps.
-* Guide users through dispute workflows.
-* Escalate suspicious or uncertain cases appropriately.
-* Require explicit approval before consequential account actions.
-* Protect sensitive information throughout the workflow.
-* Maintain an auditable record of agent actions and decisions.
+1. Help users understand unfamiliar transactions.
+2. Provide policy-grounded explanations.
+3. Guide users through dispute workflows.
+4. Detect situations requiring account protection.
+5. Require approval before consequential actions.
+6. Escalate uncertain or high-risk cases.
+7. Protect PII throughout the workflow.
+8. Maintain an auditable record of agent activity.
+
+Non-Goals
+
+The MVP will not:
+
+* Make autonomous financial decisions.
+* Lock cards without explicit approval.
+* Give the LLM unrestricted tool access.
+* Process real financial transactions.
+* Expand agent autonomy without evaluation evidence.
 
 ⸻
 
-4. Success Metrics
+3. Personas
 
-North Star Metric
+Cardholder
 
-Safe Resolutions per 1,000 Eligible Agent Sessions
+A customer who sees a transaction they do not recognize.
 
-This measures whether the agent successfully helps users while operating within defined safety boundaries.
+Needs
 
-Supporting Metrics
+* Understand the transaction quickly.
+* Know whether action is required.
+* Receive clear next steps.
+* Stay in control of account changes.
 
-Metric	Target
-Unauthorized consequential actions	0
-MVP regression scenarios passing	100%
-PII protection	No exposed sensitive information
-Consequential actions without approval	0
+Fraud Operations Specialist
 
-The primary hard guardrail is zero unauthorized consequential actions.
+An internal specialist reviewing cases the AI cannot safely resolve.
 
-⸻
+Needs
 
-5. Personas
-
-Primary — Cardholder
-
-A customer who notices a transaction they do not immediately recognize and wants to understand what happened and determine what to do next.
-
-Needs: Fast explanation, clear next steps, account safety and confidence before taking action.
-
-Secondary — Fraud Operations Specialist
-
-An internal specialist responsible for reviewing cases that require human judgment or additional investigation.
-
-Needs: Clear context, escalation information and an auditable history of the AI interaction.
+* Understand why the case was escalated.
+* Review relevant transaction context.
+* See what the agent already attempted.
+* Access an audit trail of actions and approvals.
 
 ⸻
 
-6. User Scenarios
+4. User Scenarios
 
-Scenario 1 — Transaction identified
+Scenario 1 — Customer recognizes the transaction
 
-A customer asks about an unfamiliar transaction.
-
-CardGuard retrieves the transaction, provides relevant context and helps the customer recognize it.
-
-Outcome: No unnecessary dispute is created.
+1. Customer selects an unfamiliar transaction.
+2. CardGuard retrieves transaction context.
+3. The agent explains available merchant and transaction information.
+4. Customer recognizes the transaction.
+5. Case is resolved without creating a dispute.
 
 Scenario 2 — Customer wants to dispute
 
-The customer still does not recognize the transaction.
+1. Customer does not recognize the transaction.
+2. CardGuard retrieves the relevant policy.
+3. Agent explains available resolution options.
+4. Customer chooses to continue.
+5. Required dispute information is collected.
+6. A synthetic dispute is created.
 
-CardGuard retrieves the appropriate policy, explains the dispute process and collects the information required to create a synthetic dispute.
+Scenario 3 — Possible account compromise
 
-Outcome: The customer receives a clear guided resolution path.
-
-Scenario 3 — Potential account compromise
-
-The interaction suggests that the customer’s card may be compromised.
-
-CardGuard recommends account protection. A card lock cannot occur automatically.
-
-Outcome: The system asks for explicit customer approval before the action proceeds.
+1. Interaction indicates potential fraud.
+2. Agent recommends protecting the account.
+3. System requests explicit approval.
+4. Customer confirms the action.
+5. Deterministic product logic executes the synthetic card-lock workflow.
 
 Scenario 4 — Agent cannot safely resolve
 
-The available information is insufficient or the case requires human judgment.
-
-Outcome: CardGuard escalates the case rather than attempting to resolve it autonomously.
-
-⸻
-
-7. User Stories / Features / Requirements
-
-P0 — Transaction Retrieval
-
-As a cardholder, I want the system to retrieve the relevant transaction so that I can understand what the charge represents.
-
-Requirement: The agent must identify the correct transaction before providing transaction-specific guidance.
+1. Agent encounters uncertainty or a restricted situation.
+2. It stops the autonomous workflow.
+3. Relevant context is captured.
+4. Case is escalated to Fraud Operations.
 
 ⸻
 
-P0 — Intent Routing
+5. Requirements
 
-As a cardholder, I want the system to understand whether I am asking for an explanation, dispute or account-protection action.
-
-Requirement: Requests must be routed to the appropriate domain workflow.
-
-⸻
-
-P0 — Governed Policy Retrieval
-
-As a cardholder, I want answers based on applicable policies rather than unsupported AI-generated information.
-
-Requirement: Policy-related responses must use approved policy retrieval.
-
-⸻
-
-P0 — Explicit Approval
-
-As a cardholder, I want control over actions that affect my account.
-
-Requirement: Consequential actions such as card locking require explicit approval before execution.
-
-The LLM must never serve as the authorization layer.
+Priority	Requirement	Description
+P0	Transaction Retrieval	Retrieve the correct transaction before providing transaction-specific guidance.
+P0	Intent Routing	Route requests to the appropriate transaction, dispute, protection, or escalation workflow.
+P0	Policy Retrieval	Ground policy-related answers in approved policy content.
+P0	Approval Layer	Require explicit approval before consequential actions.
+P0	PII Protection	Prevent sensitive information from being unnecessarily exposed to the model or logs.
+P0	Escalation	Route uncertain or restricted cases to Fraud Operations.
+P0	Audit Trail	Record important agent decisions, tool calls, approvals, and outcomes.
+P0	Prompt-Injection Protection	Prevent untrusted instructions from bypassing system policies or tool controls.
+P1	Fraud Ops Console	Give specialists context for escalated cases.
+P1	Regression Evaluations	Test normal, failure, safety, and adversarial scenarios before releases.
 
 ⸻
 
-P0 — Human Escalation
+6. System Architecture
 
-As a customer, I want uncertain or high-risk situations reviewed by the appropriate specialist.
+┌─────────────────┐
+│   Customer UI   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│     FastAPI     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ LangGraph Agent │
+└────────┬────────┘
+         │
+         ├──────────────► OpenAI
+         │
+         ├──────────────► Policy Retrieval
+         │
+         ├──────────────► Domain Tools
+         │
+         ▼
+┌─────────────────┐
+│   PostgreSQL    │
+└─────────────────┘
 
-Requirement: The system must support escalation when the agent cannot safely complete the workflow.
+Agent Flow
 
-⸻
+User Request
+     │
+     ▼
+Safety Check
+     │
+     ▼
+Intent Classification
+     │
+     ▼
+Domain Workflow
+     │
+     ▼
+Action Required?
+   /     \
+ No       Yes
+ │         │
+ │         ▼
+ │    Approval Required?
+ │       /       \
+ │     Yes        No
+ │      │          │
+ │      ▼          ▼
+ │  User Approval  Execute Allowed Action
+ │
+ ▼
+Outcome / Escalation
 
-P0 — PII Protection
+The LLM is never the authorization layer.
 
-As a customer, I expect sensitive financial information to remain protected.
-
-Requirement: Personally identifiable information must be redacted where required before model processing or logging.
-
-⸻
-
-P0 — Audit Trail
-
-As a Fraud Operations specialist, I need visibility into what the agent did so that cases can be reviewed.
-
-Requirement: Important agent decisions, tool calls, approvals and outcomes must be auditable.
-
-⸻
-
-P1 — Fraud Operations Console
-
-Provide specialists with an internal interface for reviewing escalated cases and relevant interaction context.
-
-⸻
-
-P1 — Regression Evaluation
-
-Maintain evaluation scenarios covering normal workflows, unsafe requests and adversarial behavior.
-
-A release should not proceed if critical safety scenarios fail.
-
-⸻
-
-8. System Design
-
-High-Level Architecture
-
-Customer UI → FastAPI → LangGraph Agent → OpenAI / Policy Retrieval / Domain Tools → PostgreSQL
-
-Agent Workflow
-
-Safety Check → Intent Classification → Domain Workflow → Approval or Escalation → Outcome
-
-The architecture intentionally separates AI reasoning from authorization.
-
-The LLM determines what information may be relevant and what action could be appropriate.
-
-Deterministic application logic determines whether that action is permitted.
-
-⸻
-
-9. Designs
-
-The MVP contains two primary interfaces:
-
-Customer UI
-
-Supports transaction identification, explanations, dispute guidance, approvals and escalation.
-
-Fraud Operations Console
-
-Supports internal review of escalated cases and agent interaction history.
-
-Detailed interface designs can evolve independently as long as the safety and approval requirements remain unchanged.
+It may determine what action could be useful, but deterministic application logic determines whether the action is allowed.
 
 ⸻
 
-10. Features Out
+7. Safety & Guardrails
 
-The following are intentionally outside the MVP:
+Financial workflows require stronger controls than a standard conversational assistant.
 
-Fully autonomous financial actions
-The agent will not independently perform consequential account actions.
+Consequential Actions
 
-Unrestricted tool access
-The model will only interact with approved domain tools.
+Actions affecting account state require deterministic authorization.
 
-Automatic expansion of AI authority
-Additional autonomy must be supported by evaluation evidence before release.
+For example:
 
-Production financial transactions
-The MVP uses synthetic account data and synthetic account actions.
+Agent recommends card lock
+          ↓
+Product policy checks eligibility
+          ↓
+User receives confirmation request
+          ↓
+User explicitly approves
+          ↓
+Application executes action
+          ↓
+Action recorded in audit trail
+
+PII
+
+Sensitive information should be minimized or redacted before being sent to the model or stored in logs where appropriate.
+
+Prompt Injection
+
+User or retrieved content must not be able to override system policies, authorization rules, or tool permissions.
+
+Human-in-the-Loop
+
+When the agent cannot safely complete a workflow, escalation is preferred over guessing.
 
 ⸻
 
-11. Release Plan
+8. Success Metrics
+
+North Star
+
+Safe Resolutions per 1,000 Eligible Agent Sessions
+
+This measures whether CardGuard successfully resolves customer problems while remaining inside defined safety boundaries.
+
+Guardrail Metrics
+
+Metric	MVP Target
+Unauthorized consequential actions	0
+Consequential actions without approval	0
+Critical MVP regression scenarios	100% pass
+
+These guardrails take priority over increasing agent autonomy.
+
+⸻
+
+9. Evaluation Strategy
+
+The agent should be evaluated across:
+
+* Successful transaction identification
+* Unrecognized transaction flows
+* Policy retrieval
+* Dispute workflows
+* Account-protection workflows
+* Approval enforcement
+* PII handling
+* Prompt injection
+* Tool misuse
+* Escalation behavior
+* Failure recovery
+
+A release should not proceed when critical safety evaluations fail.
+
+⸻
+
+10. Release Strategy
+
+CardGuard uses progressive rollout rather than immediately granting the agent broad autonomy.
+
+Prototype
+   ↓
+Offline Evaluation
+   ↓
+Adversarial Evaluation
+   ↓
+Shadow Mode
+   ↓
+Specialist-Assisted
+   ↓
+Limited Pilot
+   ↓
+Evidence-Based Autonomy Expansion
 
 Phase 1 — Prototype
 
-Validate the end-to-end workflow using synthetic data.
+Validate the complete workflow using synthetic data.
 
 Phase 2 — Offline & Adversarial Evaluation
 
-Test expected workflows, failure cases, prompt injection and safety boundaries.
+Test expected behavior, failure cases, prompt injection, and safety boundaries.
 
 Phase 3 — Shadow Mode
 
-Evaluate agent behavior without allowing it to control consequential account actions.
+Observe agent decisions without allowing consequential actions.
 
 Phase 4 — Specialist-Assisted
 
@@ -270,63 +317,34 @@ Allow Fraud Operations specialists to review AI recommendations.
 
 Phase 5 — Limited Pilot
 
-Release bounded capabilities to a controlled user population.
+Introduce bounded functionality to a controlled user group.
 
-Phase 6 — Evidence-Based Autonomy
+Phase 6 — Evidence-Based Expansion
 
-Expand capabilities only when evaluation and operational evidence demonstrate that doing so is safe.
-
-⸻
-
-12. Open Issues
-
-* What confidence or evidence should trigger automatic escalation?
-* Which additional account actions should require explicit approval?
-* What evaluation threshold should block a release?
-* What information should Fraud Operations receive during escalation?
-* How long should agent decision and audit records be retained?
-* Which additional adversarial scenarios should be included before pilot launch?
-
-These remain open until supported by sufficient product, technical or evaluation evidence.
+Increase autonomy only when evaluation and operational evidence support the change.
 
 ⸻
 
-13. Q&A
+11. Open Questions
 
-Why not build a normal chatbot?
+* What conditions should automatically trigger escalation?
+* What evidence should be required before increasing agent autonomy?
+* Which additional account actions require explicit approval?
+* What evaluation failures should block a release?
+* What context should Fraud Operations receive during escalation?
+* How long should audit records be retained?
+* What additional adversarial scenarios should be tested?
 
-Transaction resolution involves workflows and actions, not only answering questions. A chatbot can explain information but cannot effectively coordinate the full resolution process.
-
-Why not allow the AI to act autonomously?
-
-The system operates in a financial context where incorrect consequential actions can create significant customer risk.
-
-Therefore:
-
-Reasoning is not authorization.
-
-What happens when the agent is uncertain?
-
-It escalates rather than guessing.
-
-How will additional autonomy be introduced?
-
-Only after evaluation and operational evidence show that the capability can operate within the defined safety requirements.
+These questions intentionally remain open until supported by sufficient product or evaluation evidence.
 
 ⸻
 
-14. Other Considerations
-
-Security
-
-Prompt injection, inappropriate tool use and PII exposure must be evaluated before release.
-
-Observability
-
-Agent workflows should provide enough visibility to understand failures, tool calls, escalations and outcomes.
-
-Product Principle
+12. Key Product Principle
 
 CardGuard AI is designed around bounded autonomy:
 
 Use AI where reasoning creates value. Use deterministic systems where control matters.
+
+The objective is not to maximize how many decisions the AI can make.
+
+The objective is to maximize how many customer problems it can safely resolve.
